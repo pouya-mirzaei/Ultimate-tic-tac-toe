@@ -4,7 +4,7 @@
 #define O_VALUE -1
 #define EMPTY_CELL 0
 
-//_____________________________ 
+//_____________________________
 
 #define CENTERAL_HOME 10
 #define CORNER_HOME 9
@@ -91,8 +91,9 @@ int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_
 
 void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_SIZE]);
 
-//_______________________________________________________________________________________ move :
+void mini_max(Cell main[BOARD_SIZE * BOARD_SIZE], int depth, int who);
 
+//_______________________________________________________________________________________ move :
 
 void move()
 {
@@ -116,7 +117,7 @@ void move()
 
                         chosen_board_idx = t;
                         chosen_cell_idx = cell_idx;
-
+                        mini_max(cells , 1 , 1);
                         export_move(chosen_board_idx, chosen_cell_idx);
                         return;
                     }
@@ -137,10 +138,7 @@ int main()
     return 0;
 }
 
-
 //_________________________________________________________________________________ function :
-
-
 
 int check_winner(int board[BOARD_SIZE][BOARD_SIZE])
 {
@@ -173,7 +171,6 @@ void analyze_board(Cell cells[9], int analyze_board[9])
         analyze_board[i] = check_winner(cells[i].board);
     }
 }
-
 
 void analyze_board(Cell cells[9], int analyze_board[BOARD_SIZE][BOARD_SIZE])
 {
@@ -310,6 +307,10 @@ void mini_max(Cell main[BOARD_SIZE * BOARD_SIZE], int depth, int who)
                 {
                     if (cells[i].board[j][k] == EMPTY_CELL)
                     {
+                        if(depth==0)
+                        {
+                            return;
+                        }
                         main[i].board[j][k] = who;
                         mini_max(main, depth - 1, who * -1);
                     }
@@ -319,3 +320,24 @@ void mini_max(Cell main[BOARD_SIZE * BOARD_SIZE], int depth, int who)
     }
 }
 
+void export_board()
+{
+    fstream board;
+    board.open("board.txt", ios::app);
+    if (board.is_open())
+    {
+        for (int j = 0; j < 9; j += 1)
+        {
+            for (int k = 0; k < 3; k += 1)
+            {
+                for (int b = 0; b < 3; b += 1)
+                {
+                    cout << cells[j].board[k][b] << " ";
+                }
+                cout<<endl;
+            }
+            cout << endl;
+        }
+        cout<<endl<<endl;
+    }
+}
