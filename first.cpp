@@ -93,6 +93,8 @@ void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_
 
 void mini_max(Cell main[BOARD_SIZE * BOARD_SIZE], int depth, int who);
 
+void export_board();
+
 //_______________________________________________________________________________________ move :
 
 void move()
@@ -117,7 +119,7 @@ void move()
 
                         chosen_board_idx = t;
                         chosen_cell_idx = cell_idx;
-                        mini_max(cells , 1 , 1);
+                        mini_max(cells , 2 , 1);
                         export_move(chosen_board_idx, chosen_cell_idx);
                         return;
                     }
@@ -131,6 +133,10 @@ void move()
 
 int main()
 {
+    fstream test ;
+    test.open( "board.txt" , ios::out );
+    test << "" ;
+    test.close() ;
     read_whole_map();
     read_available_boards();
     move();
@@ -311,6 +317,7 @@ void mini_max(Cell main[BOARD_SIZE * BOARD_SIZE], int depth, int who)
                         {
                             return;
                         }
+                        export_board();
                         main[i].board[j][k] = who;
                         mini_max(main, depth - 1, who * -1);
                     }
@@ -332,12 +339,12 @@ void export_board()
             {
                 for (int b = 0; b < 3; b += 1)
                 {
-                    cout << cells[j].board[k][b] << " ";
+                    board << cells[j].board[k][b] << " ";
                 }
-                cout<<endl;
+                board<<endl;
             }
-            cout << endl;
+            board<< endl;
         }
-        cout<<endl<<endl;
+        board<<endl<<endl;
     }
 }
