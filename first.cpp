@@ -4,6 +4,16 @@
 #define O_VALUE -1
 #define EMPTY_CELL 0
 
+//_____________________________ 
+
+#define CENTERAL_HOME 10
+#define CORNER_HOME 9
+#define MIDDLE_HOME 8
+#define NEAR_HOME 14
+#define BIG_BOARD_VALUE 3
+
+//_____________________________
+
 #define MAP_EXPORT_FILE "map.txt"
 #define STATE_EXPORT_FILE "state.txt"
 #define MOVE_EXPORT_FILE "move.txt"
@@ -67,6 +77,23 @@ void export_move(int board_idx, int cell_idx)
     file.close();
 }
 
+//__________________________________________________________________________________________ my function :
+
+int check_winner(int board[BOARD_SIZE][BOARD_SIZE]);
+
+void analyze_board(Cell cells[9], int analyze_board[BOARD_SIZE][BOARD_SIZE]);
+
+int board_score(int board[BOARD_SIZE][BOARD_SIZE]);
+
+int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE]);
+
+int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_SIZE][BOARD_SIZE]);
+
+void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_SIZE]);
+
+//_______________________________________________________________________________________ move :
+
+
 void move()
 {
     // Start your code here
@@ -109,3 +136,186 @@ int main()
 
     return 0;
 }
+
+
+//_________________________________________________________________________________ function :
+
+
+
+int check_winner(int board[BOARD_SIZE][BOARD_SIZE])
+{
+    for (int i = 0; i < BOARD_SIZE; i++)
+    {
+        if (board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0] != EMPTY_CELL)
+        {
+            return board[i][0];
+        }
+        else if (board[0][i] == board[1][i] && board[1][i] == board[2][i] && board[0][i] != EMPTY_CELL)
+        {
+            return board[0][i];
+        }
+    }
+    if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] != EMPTY_CELL)
+    {
+        return board[0][0];
+    }
+    else if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[0][2] != EMPTY_CELL)
+    {
+        return board[0][2];
+    }
+    return 0;
+}
+
+void analyze_board(Cell cells[9], int analyze_board[9])
+{
+    for (int i = 0; i < 9; i++)
+    {
+        analyze_board[i] = check_winner(cells[i].board);
+    }
+}
+
+
+void analyze_board(Cell cells[9], int analyze_board[BOARD_SIZE][BOARD_SIZE])
+{
+    for (int i = 0; i < BOARD_SIZE; i++)
+    {
+        for (int j = 0; j < BOARD_SIZE; j++)
+        {
+            analyze_board[i][j] = check_winner(cells[i].board);
+        }
+    }
+}
+
+int board_score(int board[BOARD_SIZE][BOARD_SIZE])
+{
+    int sum = 0;
+    int k;
+
+    for (int i = 0; i < BOARD_SIZE; i++)
+    {
+        for (int j = 0; j < BOARD_SIZE; j++)
+        {
+            k = 3 * i + j;
+            if (k == 4)
+            {
+                sum += board[i][j] * CENTERAL_HOME;
+            }
+            else if (k == 0 || k == 2 || k == 6 || k == 8)
+            {
+                sum += board[i][j] * CORNER_HOME;
+            }
+            else if (k == 1 || k == 3 || k == 5 || k == 7)
+            {
+                sum += board[i][j] * MIDDLE_HOME;
+            }
+        }
+    }
+    return sum;
+}
+
+int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE])
+{
+    int sum = 0, row = 0, col = 0;
+
+    for (int i = 0; i < BOARD_SIZE; i++)
+    {
+        row = board[i][0] + board[i][1] + board[i][2];
+        col = board[0][i] + board[1][i] + board[2][i];
+
+        if (row == 2)
+        {
+            sum += NEAR_HOME;
+        }
+        else if (row == -2)
+        {
+            sum -= NEAR_HOME;
+        }
+        if (col == 2)
+        {
+            sum += NEAR_HOME;
+        }
+        else if (col == -2)
+        {
+            sum -= NEAR_HOME;
+        }
+    }
+
+    row = board[0][0] + board[1][1] + board[2][2];
+    col = board[2][0] + board[1][1] + board[0][2];
+    if (row == 2)
+    {
+        sum += NEAR_HOME;
+    }
+    else if (row == -2)
+    {
+        sum -= NEAR_HOME;
+    }
+    if (col == 2)
+    {
+        sum += NEAR_HOME;
+    }
+    else if (col == -2) // +2 or -2 for each player (first or second ) can be difrent .
+    {
+        sum -= NEAR_HOME;
+    }
+    return sum;
+}
+
+int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_SIZE][BOARD_SIZE])
+{
+    int sum = 0;
+
+    for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
+    {
+        for (int j = 0; j < BOARD_SIZE; j++)
+        {
+            if (analyze_big_board[i][j] == EMPTY_CELL)
+            {
+                sum += board_score(cells[i].board);
+                sum += board_score_plus(cells[i].board);
+            }
+            else
+            {
+                sum += board_score(analyze_big_board) * BIG_BOARD_VALUE;
+                sum += board_score_plus(analyze_big_board) * BIG_BOARD_VALUE;
+            }
+        }
+    }
+    return sum;
+}
+
+void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_SIZE])
+{
+    for (int i = 0; i < BOARD_SIZE; i++)
+    {
+        for (int j = 0; j < BOARD_SIZE; j++)
+        {
+            for (int k = 0; k < BOARD_SIZE; k++)
+            {
+                temp[i].board[j][k] = main[i].board[j][k];
+            }
+        }
+    }
+}
+
+void mini_max(Cell main[BOARD_SIZE * BOARD_SIZE], int depth, int who)
+{
+    for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
+    {
+        if (boards[i])
+        {
+            for (int j = 0; j < BOARD_SIZE; j++)
+            {
+                for (int k = 0; k < BOARD_SIZE; k++)
+                {
+                    if (cells[i].board[j][k] == EMPTY_CELL)
+                    {
+                        main[i].board[j][k] = who;
+                        mini_max(main, depth - 1, who * -1);
+                    }
+                }
+            }
+        }
+    }
+}
+
