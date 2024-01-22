@@ -6,7 +6,7 @@
 
 //_____________________________
 
-#define CENTERAL_HOME 10
+#define CENTRAL_HOME 10
 #define CORNER_HOME 9
 #define MIDDLE_HOME 8
 #define NEAR_HOME 14
@@ -119,7 +119,7 @@ void move()
 
                         chosen_board_idx = t;
                         chosen_cell_idx = cell_idx;
-                        mini_max(cells , 2 , 1);
+                        mini_max(cells, 2, 1);
                         export_move(chosen_board_idx, chosen_cell_idx);
                         return;
                     }
@@ -128,15 +128,16 @@ void move()
         }
     }
 
-    // End yout code here
+    // End your code here
 }
 
 int main()
 {
-    fstream test ;
-    test.open( "board.txt" , ios::out );
-    test << "" ;
-    test.close() ;
+
+    fstream test;
+    test.open("board.txt", ios::out);
+    test << "";
+    test.close();
     read_whole_map();
     read_available_boards();
     move();
@@ -201,7 +202,7 @@ int board_score(int board[BOARD_SIZE][BOARD_SIZE])
             k = 3 * i + j;
             if (k == 4)
             {
-                sum += board[i][j] * CENTERAL_HOME;
+                sum += board[i][j] * CENTRAL_HOME;
             }
             else if (k == 0 || k == 2 || k == 6 || k == 8)
             {
@@ -257,7 +258,7 @@ int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE])
     {
         sum += NEAR_HOME;
     }
-    else if (col == -2) // +2 or -2 for each player (first or second ) can be difrent .
+    else if (col == -2) // +2 or -2 for each player (first or second ) can be different .
     {
         sum -= NEAR_HOME;
     }
@@ -303,6 +304,10 @@ void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_
 
 void mini_max(Cell main[BOARD_SIZE * BOARD_SIZE], int depth, int who)
 {
+    if (depth == 0)
+    {
+        return;
+    }
     for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
     {
         if (boards[i])
@@ -313,13 +318,10 @@ void mini_max(Cell main[BOARD_SIZE * BOARD_SIZE], int depth, int who)
                 {
                     if (cells[i].board[j][k] == EMPTY_CELL)
                     {
-                        if(depth==0)
-                        {
-                            return;
-                        }
-                        export_board();
                         main[i].board[j][k] = who;
                         mini_max(main, depth - 1, who * -1);
+                        export_board();
+                        main[i].board[j][k] = EMPTY_CELL;
                     }
                 }
             }
@@ -341,10 +343,13 @@ void export_board()
                 {
                     board << cells[j].board[k][b] << " ";
                 }
-                board<<endl;
+                board << endl;
             }
-            board<< endl;
+            board << endl;
         }
-        board<<endl<<endl;
+        board << endl
+              << endl
+              << endl
+              << "--------------------------------------------------------------\n";
     }
 }
