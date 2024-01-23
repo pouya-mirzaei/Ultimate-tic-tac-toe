@@ -81,7 +81,7 @@ void export_move(int board_idx, int cell_idx)
 
 //__________________________________________________________________________________________ my function :
 
-int check_winner(int board[BOARD_SIZE][BOARD_SIZE]);
+int checkWinner(int board[BOARD_SIZE][BOARD_SIZE]);
 
 void analyze_board(Cell cells[9]);
 
@@ -156,7 +156,7 @@ int main()
 
 //_________________________________________________________________________________ function :
 
-int check_winner(int board[BOARD_SIZE][BOARD_SIZE])
+int checkWinner(int board[BOARD_SIZE][BOARD_SIZE])
 {
     for (int i = 0; i < BOARD_SIZE; i++)
     {
@@ -184,7 +184,7 @@ void analyze_board(Cell cells[9], int analyze_board[9])
 {
     for (int i = 0; i < 9; i++)
     {
-        analyze_board[i] = check_winner(cells[i].board);
+        analyze_board[i] = checkWinner(cells[i].board);
     }
 }
 
@@ -194,7 +194,7 @@ void analyze_board(Cell cells[9])
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            bigBoard[i][j] = check_winner(cells[i].board);
+            bigBoard[i][j] = checkWinner(cells[i].board);
         }
     }
 }
@@ -290,7 +290,7 @@ int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int big_board[BOARD_SIZE][BO
     }
     sum += board_score(big_board) * BIG_BOARD_VALUE;
     sum += board_score_plus(big_board) * BIG_BOARD_VALUE;
-    sum += check_winner(big_board) * WIN_VALUE;
+    sum += checkWinner(big_board) * WIN_VALUE;
 
     return sum;
 }
@@ -347,7 +347,7 @@ void makeTempMove(Cell board[], int BigBoardIndex, int smallBoardI, int smallBoa
 
     int boardIndex = smallBoardI * 3 + smallBoardJ;
 
-    if (check_winner(board[boardIndex].board) == EMPTY_CELL)
+    if (checkWinner(board[boardIndex].board) == EMPTY_CELL)
     {
         boards[boardIndex] = 1;
         for (int i = 0; i < 9; i++)
@@ -360,7 +360,7 @@ void makeTempMove(Cell board[], int BigBoardIndex, int smallBoardI, int smallBoa
     {
         for (int i = 0; i < 9; i++)
         {
-            if (check_winner(board[i].board) == EMPTY_CELL)
+            if (checkWinner(board[i].board) == EMPTY_CELL)
             {
                 boards[i] = 1;
             }
