@@ -96,6 +96,11 @@ int mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn);
 
 void export_board();
 
+// matin :
+
+void makeTempMove();
+void removeTempMove();
+
 //_______________________________________________________________________________________ move :
 
 void move()
