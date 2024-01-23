@@ -30,6 +30,7 @@ struct Cell
 
 Cell cells[BOARD_SIZE * BOARD_SIZE];
 bool boards[BOARD_SIZE * BOARD_SIZE];
+int bigBoard[BOARD_SIZE][BOARD_SIZE];
 
 void read_whole_map()
 {
@@ -81,7 +82,7 @@ void export_move(int board_idx, int cell_idx)
 
 int check_winner(int board[BOARD_SIZE][BOARD_SIZE]);
 
-void analyze_board(Cell cells[9], int analyze_board[BOARD_SIZE][BOARD_SIZE]);
+void analyze_board(Cell cells[9]);
 
 int board_score(int board[BOARD_SIZE][BOARD_SIZE]);
 
@@ -91,7 +92,7 @@ int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_
 
 void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_SIZE]);
 
-void mini_max(Cell main[BOARD_SIZE * BOARD_SIZE], int depth, int who);
+void mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn);
 
 void export_board();
 
@@ -102,6 +103,8 @@ void move()
     // Start your code here
     int chosen_board_idx = 0;
     int chosen_cell_idx = 0;
+
+    analyze_board(cells);
 
     // Sample code
     int lim = BOARD_SIZE * BOARD_SIZE;
@@ -179,13 +182,13 @@ void analyze_board(Cell cells[9], int analyze_board[9])
     }
 }
 
-void analyze_board(Cell cells[9], int analyze_board[BOARD_SIZE][BOARD_SIZE])
+void analyze_board(Cell cells[9])
 {
     for (int i = 0; i < BOARD_SIZE; i++)
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            analyze_board[i][j] = check_winner(cells[i].board);
+            bigBoard[i][j] = check_winner(cells[i].board);
         }
     }
 }
@@ -303,8 +306,12 @@ void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_
     }
 }
 
-void mini_max(Cell main[BOARD_SIZE * BOARD_SIZE], int depth, int who)
+void mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
 {
+    if (depth == 0)
+    {
+        // return give_score(board);
+    }
 }
 
 void export_board()
