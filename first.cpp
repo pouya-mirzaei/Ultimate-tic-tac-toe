@@ -341,9 +341,9 @@ void export_board()
 {
 }
 
-void makeTempMove(Cell board[], int BigBoardIndex, int smallBoardI, int smallBoardJ, int player, bool boards[])
+void makeTempMove(Cell board[], int bigBoardIndex, int smallBoardI, int smallBoardJ, int player, bool boards[])
 {
-    board[BigBoardIndex].board[smallBoardI][smallBoardJ] = player;
+    board[bigBoardIndex].board[smallBoardI][smallBoardJ] = player;
 
     int boardIndex = smallBoardI * 3 + smallBoardJ;
 
