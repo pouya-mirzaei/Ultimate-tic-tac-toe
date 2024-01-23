@@ -93,7 +93,7 @@ int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_
 
 void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_SIZE]);
 
-void mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn);
+int mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn);
 
 void export_board();
 
@@ -277,20 +277,20 @@ int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE])
 int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int big_board[BOARD_SIZE][BOARD_SIZE])
 {
     int sum = 0;
-    for (int i = 0; i < BOARD_SIZE ; i++)
+    for (int i = 0; i < BOARD_SIZE; i++)
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
             if (big_board[i][j] == EMPTY_CELL)
             {
-                sum += board_score(cells[3*i + j].board);
-                sum += board_score_plus(cells[3*i + j].board);
+                sum += board_score(cells[3 * i + j].board);
+                sum += board_score_plus(cells[3 * i + j].board);
             }
         }
     }
     sum += board_score(big_board) * BIG_BOARD_VALUE;
     sum += board_score_plus(big_board) * BIG_BOARD_VALUE;
-    sum += check_winner(big_board) * WIN_VALUE ;
+    sum += check_winner(big_board) * WIN_VALUE;
 
     return sum;
 }
@@ -309,11 +309,11 @@ void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_
     }
 }
 
-void mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
+int mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
 {
     if (depth == 0)
     {
-        // return give_score(board);
+        return give_score(board, bigBoard);
     }
 }
 
