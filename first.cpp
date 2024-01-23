@@ -30,7 +30,7 @@ struct Cell
 
 Cell cells[BOARD_SIZE * BOARD_SIZE];
 bool boards[BOARD_SIZE * BOARD_SIZE];
-bool bigBoard[BOARD_SIZE][BOARD_SIZE];
+int bigBoard[BOARD_SIZE][BOARD_SIZE];
 
 void read_whole_map()
 {
@@ -309,6 +309,7 @@ void mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
 {
     if (depth == 0)
     {
+        // return give_score(board);
     }
 }
 
