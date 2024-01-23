@@ -10,7 +10,7 @@
 #define CORNER_HOME 9
 #define MIDDLE_HOME 8
 #define NEAR_HOME 14
-#define BIG_BOARD_VALUE 3
+#define BIG_BOARD_VALUE 6
 #define WIN_VALUE 1000
 
 //_____________________________
@@ -131,6 +131,9 @@ int main()
     fstream test;
     test.open("board.txt", ios::out);
     test << "";
+    test.close();
+
+    test.open("board.txt", ios::out);
     test.close();
     read_whole_map();
     read_available_boards();
@@ -318,6 +321,7 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
                         copyArr(boards, tempBoards);
 
                         makeTempMove(cells, t, i, j, turn, boards);
+                        export_board();
 
                         if (turn == X_VALUE)
                         {
@@ -325,6 +329,9 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
                             if (score > maxScore)
                             {
                                 maxScore = score;
+                                coordinates[0] = t;
+                                coordinates[1] = i;
+                                coordinates[2] = j;
                             }
                         }
                         else
@@ -333,9 +340,6 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
                             if (score < minScore)
                             {
                                 minScore = score;
-                                coordinates[0] = t;
-                                coordinates[1] = i;
-                                coordinates[2] = j;
                             }
                         }
                         removeTempMove(board, t, i, j, tempBoards);
@@ -352,6 +356,32 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
 
 void export_board()
 {
+    fstream file;
+    file.open("board.txt", ios::app);
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            for (int k = 0; k < 3; k++)
+            {
+                file << cells[i].board[j][k] << " ";
+            }
+            file << endl;
+        }
+        file << endl;
+    }
+
+    file << endl;
+    file << "score : " << give_score(cells, bigBoard);
+    file << "\n boards :";
+
+    for (int i = 0; i < 9; i++)
+    {
+        file << boards[i] << " ";
+    }
+
+    file << "----------------------------------------------------------------------------------------";
+    file.close();
 }
 
 void makeTempMove(Cell board[], int bigBoardIndex, int smallBoardI, int smallBoardJ, int player, bool boards[])
