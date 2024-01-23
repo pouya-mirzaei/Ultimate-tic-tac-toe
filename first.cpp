@@ -364,7 +364,12 @@ void export_board()
         {
             for (int k = 0; k < 3; k++)
             {
-                file << cells[i].board[j][k] << " ";
+                if (cells[i].board[j][k] == X_VALUE)
+                    file << "x ";
+                else if (cells[i].board[j][k] == O_VALUE)
+                    file << "o ";
+                else
+                    file << "- ";
             }
             file << endl;
         }
@@ -373,14 +378,27 @@ void export_board()
 
     file << endl;
     file << "score : " << give_score(cells, bigBoard);
-    file << "\n boards :";
+    file << "\nboards :\n";
 
-    for (int i = 0; i < 9; i++)
+    int counter = 0;
+
+    for (int i = 0; i < 3; i++)
     {
-        file << boards[i] << " ";
+        for (int j = 0; j < 3; j++)
+        {
+            counter++;
+            file << boards[3 * i + j] << " ";
+            if (counter == 3)
+            {
+                file << endl;
+                counter = 0;
+            }
+        }
     }
 
-    file << "----------------------------------------------------------------------------------------";
+    file << "\n----------------------------------------------------------------------------------------";
+    file << endl
+         << endl;
     file.close();
 }
 
