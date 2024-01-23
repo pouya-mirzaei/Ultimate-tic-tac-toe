@@ -103,8 +103,8 @@ void export_board();
 
 // matin :
 
-void makeTempMove();
-void removeTempMove(Cell board[], int bigBoardIndex, int smallBoardI, int smallBoardJ);
+void makeTempMove(Cell board[], int bigBoardIndex, int smallBoardI, int smallBoardJ, int player, bool boards[]);
+void removeTempMove(Cell board[], int bigBoardIndex, int smallBoardI, int smallBoardJ, bool tempBoards[]);
 
 //_______________________________________________________________________________________ move :
 
@@ -116,30 +116,11 @@ void move()
 
     analyze_board(cells);
 
-    // Sample code
-    int lim = BOARD_SIZE * BOARD_SIZE;
-    for (int t = 0; t < lim; t++)
-    {
-        if (boards[t]) // boards[t] == true
-        {
-            for (int i = 0; i < BOARD_SIZE; i++)
-            {
-                for (int j = 0; j < BOARD_SIZE; j++)
-                {
-                    if (cells[t].board[i][j] == EMPTY_CELL)
-                    {
-                        int cell_idx = i * BOARD_SIZE + j;
+    minimax(cells, 2, X_VALUE);
 
-                        chosen_board_idx = t;
-                        chosen_cell_idx = cell_idx;
-                        minimax(cells, 2, 1);
-                        export_move(chosen_board_idx, chosen_cell_idx);
-                        return;
-                    }
-                }
-            }
-        }
-    }
+    int big_id = coordinates[0];
+    int small_id = coordinates[1] * 3 + coordinates[2];
+    export_move(big_id, small_id);
 
     // End your code here
 }
