@@ -267,6 +267,7 @@ int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE])
 
 int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_SIZE][BOARD_SIZE])
 {
+    // here
     int sum = 0;
 
     for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
