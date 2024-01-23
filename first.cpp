@@ -341,37 +341,32 @@ void export_board()
 {
 }
 
-void makeTempMove(Cell board[] , int BigBoardIndex , int smallBoardI , int smallBoardJ , int player , bool boards[])
+void makeTempMove(Cell board[], int BigBoardIndex, int smallBoardI, int smallBoardJ, int player, bool boards[])
 {
-    board[BigBoardIndex].board[smallBoardI][smallBoardJ] = player ;
+    board[BigBoardIndex].board[smallBoardI][smallBoardJ] = player;
 
-    int boards_index = smallBoardI*3 + smallBoardJ ;
+    int boardIndex = smallBoardI * 3 + smallBoardJ;
 
-    if(check_winner( board[boards_index].board ) == EMPTY_CELL )
+    if (check_winner(board[boardIndex].board) == EMPTY_CELL)
     {
-        for( int i = 0 ; i < 9 ; i++ )
+        boards[boardIndex] = 1;
+        for (int i = 0; i < 9; i++)
         {
-            if( i == boards_index )
-            {
-                boards[i] = 1 ;
-            }
-            else 
-            {
-                boards[i] = 0 ;
-            }
+            if (i != boardIndex)
+                boards[i] = 0;
         }
     }
     else
     {
-        for( int i = 0 ; i < 9 ; i++ )
+        for (int i = 0; i < 9; i++)
         {
-            if( check_winner( board[i].board ) == EMPTY_CELL  )
+            if (check_winner(board[i].board) == EMPTY_CELL)
             {
-                boards[i] = 1 ;
+                boards[i] = 1;
             }
-            else 
+            else
             {
-                boards[i] = 0 ;
+                boards[i] = 0;
             }
         }
     }
