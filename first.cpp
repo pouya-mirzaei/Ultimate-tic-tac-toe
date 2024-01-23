@@ -6,7 +6,7 @@
 
 //_____________________________
 
-#define CENTRAL_HOME 11
+#define CENTRAL_HOME 10
 #define CORNER_HOME 9
 #define MIDDLE_HOME 8
 #define NEAR_HOME 14
@@ -93,6 +93,8 @@ int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE]);
 
 int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_SIZE][BOARD_SIZE]);
 
+void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_SIZE]);
+
 void copyArr(bool copy[], bool paste[]);
 
 int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn);
@@ -130,6 +132,9 @@ int main()
     test.open("board.txt", ios::out);
     test << "";
     test.close();
+
+    test.open("board.txt", ios::out);
+    test.close();
     read_whole_map();
     read_available_boards();
     move();
@@ -163,13 +168,21 @@ int checkWinner(int board[BOARD_SIZE][BOARD_SIZE])
     return 0;
 }
 
+void analyze_board(Cell cells[9], int analyze_board[9])
+{
+    for (int i = 0; i < 9; i++)
+    {
+        analyze_board[i] = checkWinner(cells[i].board);
+    }
+}
+
 void analyze_board(Cell cells[9])
 {
     for (int i = 0; i < BOARD_SIZE; i++)
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            bigBoard[i][j] = checkWinner(cells[3*i + j].board);
+            bigBoard[i][j] = checkWinner(cells[i].board);
         }
     }
 }
@@ -270,6 +283,20 @@ int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int big_board[BOARD_SIZE][BO
     return sum;
 }
 
+void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_SIZE])
+{
+    for (int i = 0; i < BOARD_SIZE; i++)
+    {
+        for (int j = 0; j < BOARD_SIZE; j++)
+        {
+            for (int k = 0; k < BOARD_SIZE; k++)
+            {
+                temp[i].board[j][k] = main[i].board[j][k];
+            }
+        }
+    }
+}
+
 int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
 {
     if (depth == 0)
@@ -294,6 +321,7 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
                         copyArr(boards, tempBoards);
 
                         makeTempMove(cells, t, i, j, turn, boards);
+                        export_board();
 
                         if (turn == X_VALUE)
                         {
@@ -301,6 +329,9 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
                             if (score > maxScore)
                             {
                                 maxScore = score;
+                                coordinates[0] = t;
+                                coordinates[1] = i;
+                                coordinates[2] = j;
                             }
                         }
                         else
@@ -309,9 +340,6 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
                             if (score < minScore)
                             {
                                 minScore = score;
-                                coordinates[0] = t;
-                                coordinates[1] = i;
-                                coordinates[2] = j;
                             }
                         }
                         removeTempMove(board, t, i, j, tempBoards);
@@ -328,6 +356,50 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
 
 void export_board()
 {
+    fstream file;
+    file.open("board.txt", ios::app);
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            for (int k = 0; k < 3; k++)
+            {
+                if (cells[i].board[j][k] == X_VALUE)
+                    file << "x ";
+                else if (cells[i].board[j][k] == O_VALUE)
+                    file << "o ";
+                else
+                    file << "- ";
+            }
+            file << endl;
+        }
+        file << endl;
+    }
+
+    file << endl;
+    file << "score : " << give_score(cells, bigBoard);
+    file << "\nboards :\n";
+
+    int counter = 0;
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            counter++;
+            file << boards[3 * i + j] << " ";
+            if (counter == 3)
+            {
+                file << endl;
+                counter = 0;
+            }
+        }
+    }
+
+    file << "\n----------------------------------------------------------------------------------------";
+    file << endl
+         << endl;
+    file.close();
 }
 
 void makeTempMove(Cell board[], int bigBoardIndex, int smallBoardI, int smallBoardJ, int player, bool boards[])
