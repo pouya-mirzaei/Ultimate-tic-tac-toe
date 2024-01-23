@@ -33,6 +33,8 @@ Cell cells[BOARD_SIZE * BOARD_SIZE];
 bool boards[BOARD_SIZE * BOARD_SIZE];
 int bigBoard[BOARD_SIZE][BOARD_SIZE];
 
+int coordinates[3];
+
 void read_whole_map()
 {
     ifstream file(MAP_EXPORT_FILE);
@@ -93,14 +95,16 @@ int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_
 
 void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_SIZE]);
 
-int mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn);
+void copyArr(bool copy[], bool paste[]);
+
+int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn);
 
 void export_board();
 
 // matin :
 
 void makeTempMove();
-void removeTempMove();
+void removeTempMove(Cell board[], int bigBoardIndex, int smallBoardI, int smallBoardJ);
 
 //_______________________________________________________________________________________ move :
 
@@ -128,7 +132,7 @@ void move()
 
                         chosen_board_idx = t;
                         chosen_cell_idx = cell_idx;
-                        mini_max(cells, 2, 1);
+                        minimax(cells, 2, 1);
                         export_move(chosen_board_idx, chosen_cell_idx);
                         return;
                     }
@@ -309,7 +313,7 @@ void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_
     }
 }
 
-int mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
+int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
 {
     if (depth == 0)
         return give_score(board, bigBoard);
@@ -329,12 +333,40 @@ int mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
                 {
                     if (board[t].board[i][j] == EMPTY_CELL)
                     {
-                        // here we should implement the functionality
+                        bool tempBoards[9];
+                        copyArr(boards, tempBoards);
+
+                        makeTempMove(cells, t, i, j, turn, boards);
+
+                        if (turn == X_VALUE)
+                        {
+                            int score = minimax(board, depth - 1, O_VALUE);
+                            if (score > maxScore)
+                            {
+                                maxScore = score;
+                            }
+                        }
+                        else
+                        {
+                            int score = minimax(board, depth - 1, X_VALUE);
+                            if (score < minScore)
+                            {
+                                minScore = score;
+                                coordinates[0] = t;
+                                coordinates[1] = i;
+                                coordinates[2] = j;
+                            }
+                        }
+                        removeTempMove(board, t, i, j, tempBoards);
                     }
                 }
             }
         }
     }
+
+    if (turn == X_VALUE)
+        return maxScore;
+    return minScore;
 }
 
 void export_board()
@@ -370,6 +402,20 @@ void makeTempMove(Cell board[], int bigBoardIndex, int smallBoardI, int smallBoa
             }
         }
     }
+
+    analyze_board(board);
 }
 
-void removeTempMove() {}
+void removeTempMove(Cell board[], int bigBoardIndex, int smallBoardI, int smallBoardJ, bool tempBoards[])
+{
+    board[bigBoardIndex].board[smallBoardI][smallBoardJ] = EMPTY_CELL;
+    copyArr(tempBoards, boards);
+}
+
+void copyArr(bool copy[], bool paste[])
+{
+    for (int i = 0; i < 9; i++)
+    {
+        paste[i] = copy[i];
+    }
+}
