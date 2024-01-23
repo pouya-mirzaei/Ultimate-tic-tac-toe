@@ -9,8 +9,8 @@
 #define CENTRAL_HOME 10
 #define CORNER_HOME 9
 #define MIDDLE_HOME 8
-#define NEAR_HOME 14
-#define BIG_BOARD_VALUE 6
+#define NEAR_HOME 11
+#define bigBoard_VALUE 6
 #define WIN_VALUE 1000
 
 //_____________________________
@@ -91,9 +91,7 @@ int board_score(int board[BOARD_SIZE][BOARD_SIZE]);
 
 int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE]);
 
-int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_SIZE][BOARD_SIZE]);
-
-void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_SIZE]);
+int giveScore(Cell cells[BOARD_SIZE * BOARD_SIZE], int bigBoard[BOARD_SIZE][BOARD_SIZE]);
 
 void copyArr(bool copy[], bool paste[]);
 
@@ -168,21 +166,13 @@ int checkWinner(int board[BOARD_SIZE][BOARD_SIZE])
     return 0;
 }
 
-void analyze_board(Cell cells[9], int analyze_board[9])
-{
-    for (int i = 0; i < 9; i++)
-    {
-        analyze_board[i] = checkWinner(cells[i].board);
-    }
-}
-
 void analyze_board(Cell cells[9])
 {
     for (int i = 0; i < BOARD_SIZE; i++)
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            bigBoard[i][j] = checkWinner(cells[i].board);
+            bigBoard[i][j] = checkWinner(cells[i * 3 + j].board);
         }
     }
 }
@@ -262,45 +252,31 @@ int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE])
     return sum;
 }
 
-int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int big_board[BOARD_SIZE][BOARD_SIZE])
+int giveScore(Cell cells[BOARD_SIZE * BOARD_SIZE], int bigBoard[BOARD_SIZE][BOARD_SIZE])
 {
     int sum = 0;
     for (int i = 0; i < BOARD_SIZE; i++)
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            if (big_board[i][j] == EMPTY_CELL)
+            if (bigBoard[i][j] == EMPTY_CELL)
             {
                 sum += board_score(cells[3 * i + j].board);
                 sum += board_score_plus(cells[3 * i + j].board);
             }
         }
     }
-    sum += board_score(big_board) * BIG_BOARD_VALUE;
-    sum += board_score_plus(big_board) * BIG_BOARD_VALUE;
-    sum += checkWinner(big_board) * WIN_VALUE;
+    sum += board_score(bigBoard) * bigBoard_VALUE;
+    sum += board_score_plus(bigBoard) * bigBoard_VALUE;
+    sum += checkWinner(bigBoard) * WIN_VALUE;
 
     return sum;
-}
-
-void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_SIZE])
-{
-    for (int i = 0; i < BOARD_SIZE; i++)
-    {
-        for (int j = 0; j < BOARD_SIZE; j++)
-        {
-            for (int k = 0; k < BOARD_SIZE; k++)
-            {
-                temp[i].board[j][k] = main[i].board[j][k];
-            }
-        }
-    }
 }
 
 int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
 {
     if (depth == 0)
-        return give_score(board, bigBoard);
+        return giveScore(board, bigBoard);
 
     int lim = BOARD_SIZE * BOARD_SIZE;
 
@@ -377,7 +353,7 @@ void export_board()
     }
 
     file << endl;
-    file << "score : " << give_score(cells, bigBoard);
+    file << "score : " << giveScore(cells, bigBoard);
     file << "\nboards :\n";
 
     int counter = 0;
