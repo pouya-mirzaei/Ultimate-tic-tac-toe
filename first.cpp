@@ -304,52 +304,8 @@ void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_
 
 void mini_max(Cell main[BOARD_SIZE * BOARD_SIZE], int depth, int who)
 {
-    if (depth == 0)
-    {
-        return;
-    }
-    for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
-    {
-        if (boards[i])
-        {
-            for (int j = 0; j < BOARD_SIZE; j++)
-            {
-                for (int k = 0; k < BOARD_SIZE; k++)
-                {
-                    if (cells[i].board[j][k] == EMPTY_CELL)
-                    {
-                        main[i].board[j][k] = who;
-                        mini_max(main, depth - 1, who * -1);
-                        export_board();
-                        main[i].board[j][k] = EMPTY_CELL;
-                    }
-                }
-            }
-        }
-    }
 }
 
 void export_board()
 {
-    fstream board;
-    board.open("board.txt", ios::app);
-    if (board.is_open())
-    {
-        for (int j = 0; j < 9; j += 1)
-        {
-            for (int k = 0; k < 3; k += 1)
-            {
-                for (int b = 0; b < 3; b += 1)
-                {
-                    board << cells[j].board[k][b] << " ";
-                }
-                board << endl;
-            }
-            board << endl;
-        }
-        board << endl
-              << endl
-              << endl
-              << "--------------------------------------------------------------\n";
-    }
 }
