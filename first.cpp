@@ -312,8 +312,28 @@ void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_
 int mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
 {
     if (depth == 0)
-    {
         return give_score(board, bigBoard);
+
+    int lim = BOARD_SIZE * BOARD_SIZE;
+
+    int maxScore = -999999;
+    int minScore = 999999;
+
+    for (int t = 0; t < lim; t++)
+    {
+        if (boards[t])
+        {
+            for (int i = 0; i < BOARD_SIZE; i++)
+            {
+                for (int j = 0; j < BOARD_SIZE; j++)
+                {
+                    if (board[t].board[i][j] == EMPTY_CELL)
+                    {
+                        // here we should implement the functionality
+                    }
+                }
+            }
+        }
     }
 }
 
