@@ -92,7 +92,7 @@ int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_
 
 void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_SIZE]);
 
-void mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn);
+int mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn);
 
 void export_board();
 
@@ -268,7 +268,7 @@ int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE])
     return sum;
 }
 
-int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_SIZE][BOARD_SIZE])
+int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int bigBoard[BOARD_SIZE][BOARD_SIZE])
 {
     // here
     int sum = 0;
@@ -277,15 +277,15 @@ int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            if (analyze_big_board[i][j] == EMPTY_CELL)
+            if (bigBoard[i][j] == EMPTY_CELL)
             {
                 sum += board_score(cells[i].board);
                 sum += board_score_plus(cells[i].board);
             }
             else
             {
-                sum += board_score(analyze_big_board) * BIG_BOARD_VALUE;
-                sum += board_score_plus(analyze_big_board) * BIG_BOARD_VALUE;
+                sum += board_score(bigBoard) * BIG_BOARD_VALUE;
+                sum += board_score_plus(bigBoard) * BIG_BOARD_VALUE;
             }
         }
     }
@@ -306,11 +306,49 @@ void copy_Cell(Cell main[BOARD_SIZE * BOARD_SIZE], Cell temp[BOARD_SIZE * BOARD_
     }
 }
 
-void mini_max(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
+int mini_max(Cell mainCells[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
 {
     if (depth == 0)
     {
-        // return give_score(board);
+        return give_score(mainCells, bigBoard);
+    }
+
+    int lim = BOARD_SIZE * BOARD_SIZE;
+
+    int maxScore = -999999;
+    int minScore = 999999;
+
+    for (int i = 0; i < lim; i++)
+    {
+        if (boards[i])
+        {
+
+            for (int j = 0; j < BOARD_SIZE; j++)
+            {
+                for (int k = 0; k < BOARD_SIZE; k++)
+                {
+                    if (mainCells[i].board[j][k] == EMPTY_CELL)
+                    {
+                        mainCells[i].board[j][k] = turn;
+                        export_board();
+
+                        if (turn == X_VALUE)
+                        {
+                            int score = mini_max(mainCells, depth - 1, O_VALUE);
+                            if (score > maxScore)
+                                maxScore = score;
+                        }
+                        else
+                        {
+
+                            int score = mini_max(mainCells, depth - 1, X_VALUE);
+                            if (score < minScore)
+                                minScore = score;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
