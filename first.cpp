@@ -274,24 +274,23 @@ int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE])
     return sum;
 }
 
-int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_SIZE][BOARD_SIZE])
+int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int big_board[BOARD_SIZE][BOARD_SIZE])
 {
     int sum = 0;
     for (int i = 0; i < BOARD_SIZE ; i++)
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            if (analyze_big_board[i][j] == EMPTY_CELL)
+            if (big_board[i][j] == EMPTY_CELL)
             {
                 sum += board_score(cells[3*i + j].board);
                 sum += board_score_plus(cells[3*i + j].board);
             }
         }
     }
-    sum += board_score(analyze_big_board) * BIG_BOARD_VALUE;
-    sum += board_score_plus(analyze_big_board) * BIG_BOARD_VALUE;
-
-    sum += check_winner(analyze_big_board) * WIN_VALUE ;
+    sum += board_score(big_board) * BIG_BOARD_VALUE;
+    sum += board_score_plus(big_board) * BIG_BOARD_VALUE;
+    sum += check_winner(big_board) * WIN_VALUE ;
 
     return sum;
 }
