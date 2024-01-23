@@ -13,5 +13,6 @@ pyvenv.cfg
 map.txt
 state.txt
 move.txt
+board.txt
 *.avi
 *.log
