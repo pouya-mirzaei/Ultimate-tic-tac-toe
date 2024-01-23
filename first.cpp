@@ -11,6 +11,7 @@
 #define MIDDLE_HOME 8
 #define NEAR_HOME 14
 #define BIG_BOARD_VALUE 3
+#define WIN_VALUE 1000
 
 //_____________________________
 
@@ -261,7 +262,7 @@ int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE])
     {
         sum += NEAR_HOME;
     }
-    else if (col == -2) // +2 or -2 for each player (first or second ) can be different .
+    else if (col == -2)
     {
         sum -= NEAR_HOME;
     }
@@ -271,23 +272,22 @@ int board_score_plus(int board[BOARD_SIZE][BOARD_SIZE])
 int give_score(Cell cells[BOARD_SIZE * BOARD_SIZE], int analyze_big_board[BOARD_SIZE][BOARD_SIZE])
 {
     int sum = 0;
-
-    for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
+    for (int i = 0; i < BOARD_SIZE ; i++)
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
             if (analyze_big_board[i][j] == EMPTY_CELL)
             {
-                sum += board_score(cells[i].board);
-                sum += board_score_plus(cells[i].board);
-            }
-            else
-            {
-                sum += board_score(analyze_big_board) * BIG_BOARD_VALUE;
-                sum += board_score_plus(analyze_big_board) * BIG_BOARD_VALUE;
+                sum += board_score(cells[3*i + j].board);
+                sum += board_score_plus(cells[3*i + j].board);
             }
         }
     }
+    sum += board_score(analyze_big_board) * BIG_BOARD_VALUE;
+    sum += board_score_plus(analyze_big_board) * BIG_BOARD_VALUE;
+
+    sum += check_winner(analyze_big_board) * WIN_VALUE ;
+
     return sum;
 }
 
