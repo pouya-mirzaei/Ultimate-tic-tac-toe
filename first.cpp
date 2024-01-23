@@ -9,7 +9,7 @@
 #define CENTRAL_HOME 11
 #define CORNER_HOME 9
 #define MIDDLE_HOME 8
-#define NEAR_HOME 13
+#define NEAR_HOME 14
 #define BIG_BOARD_VALUE 6
 #define WIN_VALUE 1000
 
