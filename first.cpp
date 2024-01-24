@@ -6,14 +6,14 @@
 
 //_____________________________
 
-#define CENTRAL_HOME 10
+#define CENTRAL_HOME 12
 #define CORNER_HOME 9
 #define MIDDLE_HOME 8
-#define NEAR_HOME 11
-#define BIG_BOARD_VALUE 10
+#define NEAR_HOME 13
+#define BIG_BOARD_VALUE 7
 #define WIN_VALUE 1000
 
-#define DEFAULT_DEPTH 4
+#define DEFAULT_DEPTH 6
 
 //_____________________________
 
@@ -101,8 +101,6 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn);
 
 void export_board();
 
-// matin :
-
 void makeTempMove(Cell board[], int bigBoardIndex, int smallBoardI, int smallBoardJ, int player, bool boards[]);
 void removeTempMove(Cell board[], int bigBoardIndex, int smallBoardI, int smallBoardJ, bool tempBoards[]);
 
@@ -142,7 +140,7 @@ int main()
     return 0;
 }
 
-//_________________________________________________________________________________ function :
+//_________________________________________________________________________________ Function :
 
 int checkWinner(int board[BOARD_SIZE][BOARD_SIZE])
 {
@@ -278,7 +276,7 @@ int giveScore(Cell cells[BOARD_SIZE * BOARD_SIZE], int bigBoard[BOARD_SIZE][BOAR
 
 int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
 {
-    if (depth == 0)
+    if (depth == 0 || checkWinner(bigBoard) != 0)
         return giveScore(board, bigBoard);
 
     int lim = BOARD_SIZE * BOARD_SIZE;
