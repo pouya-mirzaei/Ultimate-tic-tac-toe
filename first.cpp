@@ -10,7 +10,7 @@
 #define CORNER_HOME 9
 #define MIDDLE_HOME 8
 #define NEAR_HOME 11
-#define bigBoard_VALUE 6
+#define BIG_BOARD_VALUE 10
 #define WIN_VALUE 1000
 
 //_____________________________
@@ -201,6 +201,7 @@ int board_score(int board[BOARD_SIZE][BOARD_SIZE])
             }
         }
     }
+
     return sum;
 }
 
@@ -266,8 +267,8 @@ int giveScore(Cell cells[BOARD_SIZE * BOARD_SIZE], int bigBoard[BOARD_SIZE][BOAR
             }
         }
     }
-    sum += board_score(bigBoard) * bigBoard_VALUE;
-    sum += board_score_plus(bigBoard) * bigBoard_VALUE;
+    sum += board_score(bigBoard) * BIG_BOARD_VALUE;
+    sum += board_score_plus(bigBoard) * BIG_BOARD_VALUE;
     sum += checkWinner(bigBoard) * WIN_VALUE;
 
     return sum;
@@ -297,7 +298,7 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
                         copyArr(boards, tempBoards);
 
                         makeTempMove(cells, t, i, j, turn, boards);
-                        export_board();
+                        // export_board();
 
                         if (turn == X_VALUE)
                         {
@@ -305,9 +306,12 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
                             if (score > maxScore)
                             {
                                 maxScore = score;
+                                // if (depth == 5)
+                                // {
                                 coordinates[0] = t;
                                 coordinates[1] = i;
                                 coordinates[2] = j;
+                                // }
                             }
                         }
                         else
