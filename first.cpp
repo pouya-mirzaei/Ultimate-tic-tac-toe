@@ -13,6 +13,8 @@
 #define BIG_BOARD_VALUE 10
 #define WIN_VALUE 1000
 
+#define DEFAULT_DEPTH 4
+
 //_____________________________
 
 #define MAP_EXPORT_FILE "map.txt"
@@ -114,7 +116,7 @@ void move()
 
     analyze_board(cells);
 
-    minimax(cells, 2, X_VALUE);
+    minimax(cells, DEFAULT_DEPTH, X_VALUE);
 
     int big_id = coordinates[0];
     int small_id = coordinates[1] * 3 + coordinates[2];
@@ -306,12 +308,12 @@ int minimax(Cell board[BOARD_SIZE * BOARD_SIZE], int depth, int turn)
                             if (score > maxScore)
                             {
                                 maxScore = score;
-                                // if (depth == 5)
-                                // {
-                                coordinates[0] = t;
-                                coordinates[1] = i;
-                                coordinates[2] = j;
-                                // }
+                                if (depth == DEFAULT_DEPTH)
+                                {
+                                    coordinates[0] = t;
+                                    coordinates[1] = i;
+                                    coordinates[2] = j;
+                                }
                             }
                         }
                         else
